@@ -54,6 +54,7 @@ function Index() {
   const [data, setData] = useState<Record<string, Record_>>({});
   const [loaded, setLoaded] = useState(false);
   const [today, setToday] = useState(0);
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     try {
@@ -61,14 +62,19 @@ function Index() {
       if (s.data) setData(s.data);
       if (s.ttId) setTtId(s.ttId);
       if (s.target) setTarget(s.target);
+      if (typeof s.dark === "boolean") setDark(s.dark);
+      else setDark(window.matchMedia("(prefers-color-scheme: dark)").matches);
     } catch {}
     const d = new Date().getDay();
     setToday(d >= 1 && d <= 5 ? d - 1 : 0);
     setLoaded(true);
   }, []);
   useEffect(() => {
-    if (loaded) localStorage.setItem("attendly", JSON.stringify({ data, ttId, target }));
-  }, [data, ttId, target, loaded]);
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
+  useEffect(() => {
+    if (loaded) localStorage.setItem("attendly", JSON.stringify({ data, ttId, target, dark }));
+  }, [data, ttId, target, dark, loaded]);
 
   const tt = TIMETABLES.find((t) => t.id === ttId) ?? TIMETABLES[0]!;
   const subjects = useMemo(() => subjectCodes(tt), [tt]);
@@ -165,6 +171,16 @@ function Index() {
                 className="w-20 rounded-lg border border-input bg-secondary px-3 py-1.5 text-foreground outline-none focus:ring-2 focus:ring-ring"
               />
             </label>
+            <button
+              type="button"
+              onClick={() => setDark((v) => !v)}
+              aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+              title={dark ? "Switch to light mode" : "Switch to dark mode"}
+              className="flex items-center gap-2 rounded-lg border border-input bg-secondary px-3 py-1.5 text-foreground outline-none hover:bg-accent focus:ring-2 focus:ring-ring"
+            >
+              {dark ? "☀️" : "🌙"}
+              <span>{dark ? "Light" : "Dark"}</span>
+            </button>
           </div>
         </div>
       </header>
