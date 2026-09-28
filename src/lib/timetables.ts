@@ -41,6 +41,19 @@ const FIRST_COMMON: Record<string, string> = {
   PCB: "PCB Lab",
 };
 
+const II_ECE_DS: Record<string, string> = {
+  A: "Transforms and Boundary Value Problems",
+  B: "Solid State Devices",
+  C: "Computer Organization and Architecture",
+  D: "Digital Logic Design",
+  E: "Electromagnetic Theory and Interference",
+  F: "Professional Ethics",
+  G: "Universal Human Values-II",
+  H: "Verbal Reasoning",
+  I: "Social Engineering",
+  LAB: "Devices and Digital IC Laboratory",
+};
+
 export const TIMETABLES: Timetable[] = [
   {
     id: "iii-ece-a", label: "III ECE-A", semester: "V Sem · Odd 2026-27", venue: "IST 518", times: T_UPPER,
@@ -115,6 +128,50 @@ export const TIMETABLES: Timetable[] = [
       ["B", "LAB", "E", "F", "", "", "", "", ""],
       ["F", "A", "E", "B", "", "", "", "", ""],
       ["C", "A", "D", "E", "", "", "", "", ""],
+    ],
+  },
+  {
+    id: "ii-bme", label: "II BME", semester: "III Sem · Odd 2026-27", venue: "IST 602 · FN", times: T_UPPER,
+    subjects: {
+      A: "Transforms and Boundary Value Problems",
+      B: "Biomedical Signals and Systems",
+      C: "Electric and Electronic Circuits",
+      D: "Digital Logic for Medical Systems",
+      E: "Medical Physics",
+      F: "Professional Ethics",
+      G: "Universal Human Values-II",
+      H: "Verbal Reasoning",
+      I: "Social Engineering",
+      DLMS: "Digital Logic for Medical Systems Lab",
+    },
+    grid: [
+      ["E", "C", "I", "I", "", "DLMS", "DLMS", "", ""],
+      ["C", "E", "B", "A", "", "H", "H", "", ""],
+      ["B", "D", "A", "", "", "H", "G", "", ""],
+      ["A", "E", "B", "D", "", "", "", "DLMS", "DLMS"],
+      ["F", "A", "C", "D", "", "", "", "G", "G"],
+    ],
+  },
+  {
+    id: "ii-ece-ds-a", label: "II ECE-DS A", semester: "III Sem · Odd 2026-27", venue: "IST 416 · FN", times: T_UPPER,
+    subjects: II_ECE_DS,
+    grid: [
+      ["E", "A", "I", "I", "", "G", "G", "LAB", "LAB"],
+      ["C", "A", "E", "D", "", "G", "G", "H", "H"],
+      ["A", "B", "C", "D", "", "", "H", "", ""],
+      ["B", "C", "A", "F", "", "LAB", "LAB", "", ""],
+      ["D", "B", "E", "C", "", "", "", "", ""],
+    ],
+  },
+  {
+    id: "ii-ece-ds-b", label: "II ECE-DS B", semester: "III Sem · Odd 2026-27", venue: "IST 411 · AN", times: T_UPPER,
+    subjects: II_ECE_DS,
+    grid: [
+      ["", "", "LAB", "LAB", "", "D", "B", "C", "I"],
+      ["LAB", "LAB", "", "", "", "C", "D", "E", "A"],
+      ["G", "G", "", "", "", "I", "E", "A", "D"],
+      ["G", "G", "H", "H", "", "A", "C", "B", "E"],
+      ["H", "H", "", "", "", "F", "A", "B", "C"],
     ],
   },
   {
