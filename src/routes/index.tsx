@@ -51,6 +51,7 @@ function roomOf(venue: string) {
 function Index() {
   const [ttId, setTtId] = useState(TIMETABLES[0]!.id);
   const [target, setTarget] = useState(75);
+  const [targetInput, setTargetInput] = useState("75");
   const [data, setData] = useState<Record<string, Record_>>({});
   const [loaded, setLoaded] = useState(false);
   const [today, setToday] = useState(0);
@@ -166,8 +167,14 @@ function Index() {
                 type="number"
                 min={1}
                 max={99}
-                value={target}
-                onChange={(e) => setTarget(Math.max(1, Math.min(99, Number(e.target.value) || 75)))}
+                value={targetInput}
+                onChange={(e) => {
+                  const raw = e.target.value;
+                  setTargetInput(raw);
+                  const n = Number(raw);
+                  if (raw !== "" && Number.isFinite(n)) setTarget(Math.max(1, Math.min(99, n)));
+                }}
+                onBlur={() => setTargetInput(String(target))}
                 className="w-20 rounded-lg border border-input bg-secondary px-3 py-1.5 text-foreground outline-none focus:ring-2 focus:ring-ring"
               />
             </label>
