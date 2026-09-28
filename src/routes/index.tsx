@@ -23,7 +23,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Record_ = Record<string, { held: number; attended: number }>;
+type Record_ = Record<string, { held: number; attended: number; od?: number }>;
 
 function pct(a: number, h: number) {
   return h <= 0 ? 0 : (a / h) * 100;
