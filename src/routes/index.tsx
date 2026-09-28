@@ -295,7 +295,9 @@ function Index() {
             </tbody>
           </table>
           <p className="border-t border-border px-3 py-2 text-left text-xs text-muted-foreground">
-            All regular classes for {tt.label} are in Room {room} ({tt.venue}).
+            {room !== tt.venue
+              ? `All regular classes for ${tt.label} are in Room ${room} (${tt.venue}).`
+              : `All regular classes for ${tt.label} are in Room ${room}.`}
           </p>
         </section>
 
@@ -314,7 +316,9 @@ function Index() {
                       <span className="mr-2 text-primary">{s.code}</span>
                       {s.name}
                     </p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{s.perWeek} hours / week · Room {room}</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {s.perWeek} {s.perWeek === 1 ? "hour" : "hours"} / week · Room {room}
+                    </p>
                   </div>
                   <span className={`shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-medium ${statusStyles[st]}`}>
                     {p.toFixed(1)}%
