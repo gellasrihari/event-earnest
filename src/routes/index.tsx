@@ -23,7 +23,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Record_ = Record<string, { held: number; attended: number }>;
+type Record_ = Record<string, { held: number; attended: number; od?: number }>;
 
 function pct(a: number, h: number) {
   return h <= 0 ? 0 : (a / h) * 100;
@@ -79,22 +79,22 @@ function Index() {
   const tt = TIMETABLES.find((t) => t.id === ttId) ?? TIMETABLES[0]!;
   const subjects = useMemo(() => subjectCodes(tt), [tt]);
   const rec = data[tt.id] ?? {};
-  const get = (code: string) => rec[code] ?? { held: 0, attended: 0 };
+  const get = (code: string) => rec[code] ?? { held: 0, attended: 0, od: 0 };
 
-  const set = (code: string, v: { held: number; attended: number }) =>
+  const set = (code: string, v: { held: number; attended: number; od?: number }) =>
     setData((d) => ({
       ...d,
-      [tt.id]: { ...(d[tt.id] ?? {}), [code]: { held: v.held, attended: Math.min(v.attended, v.held) } },
+      [tt.id]: { ...(d[tt.id] ?? {}), [code]: { held: v.held, attended: Math.min(v.attended, v.held), od: v.od ?? 0 } },
     }));
 
-  const markDay = (dayIdx: number, present: boolean) => {
+  const markDay = (dayIdx: number, present: boolean, od = false) => {
     const counts: Record<string, number> = {};
     tt.grid[dayIdx]!.forEach((c) => c && (counts[c] = (counts[c] ?? 0) + 1));
     setData((d) => {
       const cur = { ...(d[tt.id] ?? {}) };
       for (const [c, n] of Object.entries(counts)) {
-        const v = cur[c] ?? { held: 0, attended: 0 };
-        cur[c] = { held: v.held + n, attended: v.attended + (present ? n : 0) };
+        const v = cur[c] ?? { held: 0, attended: 0, od: 0 };
+        cur[c] = { held: v.held + n, attended: v.attended + (present || od ? n : 0), od: (v.od ?? 0) + (od ? n : 0) };
       }
       return { ...d, [tt.id]: cur };
     });
@@ -220,14 +220,18 @@ function Index() {
             <p className="mt-2 text-xs text-muted-foreground">
               {todays.length} hours: {todays.map((x) => x.c).join(", ") || "none"}
             </p>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <button onClick={() => markDay(today, true)} className="rounded-lg border border-safe/40 bg-safe/10 px-3 py-2 text-sm font-medium text-safe hover:bg-safe/20">
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              <button onClick={() => markDay(today, true)} className="rounded-lg border border-safe/40 bg-safe/10 px-2 py-2 text-sm font-medium text-safe hover:bg-safe/20">
                 Present all
               </button>
-              <button onClick={() => markDay(today, false)} className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm font-medium text-danger hover:bg-danger/20">
+              <button onClick={() => markDay(today, false, true)} title="On Duty — counts as present" className="rounded-lg border border-primary/40 bg-primary/10 px-2 py-2 text-sm font-medium text-primary hover:bg-primary/20">
+                OD all
+              </button>
+              <button onClick={() => markDay(today, false)} className="rounded-lg border border-danger/40 bg-danger/10 px-2 py-2 text-sm font-medium text-danger hover:bg-danger/20">
                 Absent all
               </button>
             </div>
+            <p className="mt-2 text-xs text-muted-foreground">OD counts as attended.</p>
           </div>
         </section>
 
@@ -360,9 +364,11 @@ function Index() {
                       : need > 0
                         ? `Attend the next ${need} to reach ${target}%.`
                         : `You can miss ${canMiss} and stay at ${target}%.`}
+                    {(v.od ?? 0) > 0 ? ` · ${v.od} OD counted present` : ""}
                   </p>
                   <div className="flex shrink-0 gap-1">
                     <button onClick={() => set(s.code, { held: v.held + 1, attended: v.attended + 1 })} className="rounded-md border border-safe/40 px-2 py-1 text-xs text-safe hover:bg-safe/10">+P</button>
+                    <button onClick={() => set(s.code, { held: v.held + 1, attended: v.attended + 1, od: (v.od ?? 0) + 1 })} title="On Duty — counts as present" className="rounded-md border border-primary/40 px-2 py-1 text-xs text-primary hover:bg-primary/10">+OD</button>
                     <button onClick={() => set(s.code, { held: v.held + 1, attended: v.attended })} className="rounded-md border border-danger/40 px-2 py-1 text-xs text-danger hover:bg-danger/10">+A</button>
                   </div>
                 </div>
