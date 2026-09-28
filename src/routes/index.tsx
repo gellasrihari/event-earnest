@@ -51,6 +51,7 @@ function roomOf(venue: string) {
 function Index() {
   const [ttId, setTtId] = useState(TIMETABLES[0]!.id);
   const [target, setTarget] = useState(75);
+  const [targetInput, setTargetInput] = useState("75");
   const [data, setData] = useState<Record<string, Record_>>({});
   const [loaded, setLoaded] = useState(false);
   const [today, setToday] = useState(0);
