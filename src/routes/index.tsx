@@ -79,12 +79,12 @@ function Index() {
   const tt = TIMETABLES.find((t) => t.id === ttId) ?? TIMETABLES[0]!;
   const subjects = useMemo(() => subjectCodes(tt), [tt]);
   const rec = data[tt.id] ?? {};
-  const get = (code: string) => rec[code] ?? { held: 0, attended: 0 };
+  const get = (code: string) => rec[code] ?? { held: 0, attended: 0, od: 0 };
 
-  const set = (code: string, v: { held: number; attended: number }) =>
+  const set = (code: string, v: { held: number; attended: number; od?: number }) =>
     setData((d) => ({
       ...d,
-      [tt.id]: { ...(d[tt.id] ?? {}), [code]: { held: v.held, attended: Math.min(v.attended, v.held) } },
+      [tt.id]: { ...(d[tt.id] ?? {}), [code]: { held: v.held, attended: Math.min(v.attended, v.held), od: v.od ?? 0 } },
     }));
 
   const markDay = (dayIdx: number, present: boolean) => {
