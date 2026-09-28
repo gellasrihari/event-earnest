@@ -45,7 +45,7 @@ const inputCls =
   "mt-1 w-full rounded-lg border border-input bg-secondary px-3 py-1.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring";
 
 function Index() {
-  const [ttId, setTtId] = useState(TIMETABLES[0].id);
+  const [ttId, setTtId] = useState(TIMETABLES[0]!.id);
   const [target, setTarget] = useState(75);
   const [data, setData] = useState<Record<string, Record_>>({});
   const [loaded, setLoaded] = useState(false);
@@ -66,7 +66,7 @@ function Index() {
     if (loaded) localStorage.setItem("attendly", JSON.stringify({ data, ttId, target }));
   }, [data, ttId, target, loaded]);
 
-  const tt = TIMETABLES.find((t) => t.id === ttId) ?? TIMETABLES[0];
+  const tt = TIMETABLES.find((t) => t.id === ttId) ?? TIMETABLES[0]!;
   const subjects = useMemo(() => subjectCodes(tt), [tt]);
   const rec = data[tt.id] ?? {};
   const get = (code: string) => rec[code] ?? { held: 0, attended: 0 };
@@ -79,7 +79,7 @@ function Index() {
 
   const markDay = (dayIdx: number, present: boolean) => {
     const counts: Record<string, number> = {};
-    tt.grid[dayIdx].forEach((c) => c && (counts[c] = (counts[c] ?? 0) + 1));
+    tt.grid[dayIdx]!.forEach((c) => c && (counts[c] = (counts[c] ?? 0) + 1));
     setData((d) => {
       const cur = { ...(d[tt.id] ?? {}) };
       for (const [c, n] of Object.entries(counts)) {
@@ -96,7 +96,7 @@ function Index() {
   );
   const overallP = pct(overall.attended, overall.held);
   const overallStatus = statusOf(overallP, target, overall.held);
-  const todays = tt.grid[today]
+  const todays = tt.grid[today]!
     .map((c, i) => ({ c, i }))
     .filter((x) => x.c);
 
