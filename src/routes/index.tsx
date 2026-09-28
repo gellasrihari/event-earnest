@@ -171,6 +171,16 @@ function Index() {
                 className="w-20 rounded-lg border border-input bg-secondary px-3 py-1.5 text-foreground outline-none focus:ring-2 focus:ring-ring"
               />
             </label>
+            <button
+              type="button"
+              onClick={() => setDark((v) => !v)}
+              aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+              title={dark ? "Switch to light mode" : "Switch to dark mode"}
+              className="flex items-center gap-2 rounded-lg border border-input bg-secondary px-3 py-1.5 text-foreground outline-none hover:bg-accent focus:ring-2 focus:ring-ring"
+            >
+              {dark ? "☀️" : "🌙"}
+              <span>{dark ? "Light" : "Dark"}</span>
+            </button>
           </div>
         </div>
       </header>
